@@ -9,5 +9,3 @@ spring:
   redis:
     cluster:
        nodes: 192.168.3.35:7001,192.168.3.37:7003,192.168.3.37:7004
-#mybatis-plus:
-#  mapper-locations:
