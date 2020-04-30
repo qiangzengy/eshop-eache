@@ -1,0 +1,13 @@
+server:
+  port: 9200
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.3.42:3306/eshop?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+  redis:
+    cluster:
+       nodes: 192.168.3.35:7001,192.168.3.37:7003,192.168.3.37:7004
+#mybatis-plus:
+#  mapper-locations: classpath*:/com/qiangzengy/eshop/cache/mapper/xml/*.xml
