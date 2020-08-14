@@ -13,7 +13,6 @@ public class CacheController {
 
     @PostMapping("/saveLocalCache")
     public void saveLocalCache(@RequestBody ProductInfo productInfo){
-        System.out.println("productInfo:"+productInfo.toString());
         cacheService.saveLocalCache(productInfo);
     }
 
