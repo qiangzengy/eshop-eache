@@ -1,6 +1,8 @@
 package com.qiangzengy.eshop.cache.config;
 
 
+import com.qiangzengy.eshop.cache.listener.InitListener;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -26,6 +28,14 @@ public class CacheConfiguration {
     @Bean
     public EhCacheCacheManager  ehCacheCacheManager(EhCacheManagerFactoryBean bean){
         return new EhCacheCacheManager(bean.getObject());
+    }
+
+    @Bean
+    public ServletListenerRegistrationBean servletListenerRegistrationBean() {
+        ServletListenerRegistrationBean servletListenerRegistrationBean =
+                new ServletListenerRegistrationBean();
+        servletListenerRegistrationBean.setListener(new InitListener());
+        return servletListenerRegistrationBean;
     }
 
 
