@@ -2,6 +2,7 @@ package com.qiangzengy.eshop.cache.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.qiangzengy.eshop.cache.entity.ProductInfo;
+import com.qiangzengy.eshop.cache.entity.ShopInfo;
 import com.qiangzengy.eshop.cache.service.CacheService;
 import com.qiangzengy.eshop.cache.utils.RedisCluster;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 
-@Service
+@Service("cacheService")
 public class CacheServiceImpl implements CacheService {
 
     public static final String CACHE_NAME = "local";
@@ -24,9 +25,10 @@ public class CacheServiceImpl implements CacheService {
      * @param productInfo
      */
     @Override
-    @CachePut(value = CACHE_NAME, key = "'key_'+#productInfo.getId()")
+    @CachePut(value = CACHE_NAME, key = "'product_info_'+#productInfo.getId()")
     public ProductInfo saveLocalCache(ProductInfo productInfo) {
-
+        //将数据更新到redis
+        saveProductInfoToRedisCache(productInfo);
         return productInfo;
 
     }
@@ -37,7 +39,7 @@ public class CacheServiceImpl implements CacheService {
      * @return
      */
     @Override
-    @Cacheable(value = CACHE_NAME, key = "'key_'+#id")
+    @Cacheable(value = CACHE_NAME, key = "'product_info_'+#id")
     public ProductInfo getLocalCache(Long id) {
         return null;
     }
@@ -60,5 +62,32 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void saveProductInfoToRedisCache(ProductInfo productInfo) {
         jedisCluster.instance().set("product_info_" + productInfo.getId(), JSON.toJSONString(productInfo));
+    }
+
+
+    @Override
+    @CachePut(value = CACHE_NAME, key = "'shop_info_'+#shopInfo.getId()")
+    public ShopInfo saveShopLocalCache(ShopInfo shopInfo) {
+        //将数据更新到redis
+        saveShopInfoToRedisCache(shopInfo);
+        return shopInfo;
+    }
+
+    @Override
+    @Cacheable(value = CACHE_NAME, key = "'shop_info_'+#id")
+    public ShopInfo getShopLocalCache(Long id) {
+        return null;
+    }
+
+    @Override
+    @CachePut(value = CACHE_NAME, key = "'shop_info'+#shopInfo.getId()")
+    public ShopInfo saveShopInfoToLocalCache(ShopInfo shopInfo) {
+        return shopInfo;
+    }
+
+    @Override
+    public void saveShopInfoToRedisCache(ShopInfo shopInfo) {
+        jedisCluster.instance().set("shop_info" + shopInfo.getId(), JSON.toJSONString(shopInfo));
+
     }
 }

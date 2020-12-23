@@ -1,6 +1,13 @@
 package com.qiangzengy.eshop.cache.listener;
 
 
+import com.qiangzengy.eshop.cache.kafka.KafkaConcusme;
+import com.qiangzengy.eshop.cache.kafka.KafkaMessageProcessor;
+import com.qiangzengy.eshop.cache.spring.SpringContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -12,6 +19,10 @@ public class InitListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
+        ServletContext sc = sce.getServletContext();
+        ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(sc);
+        new SpringContext().setApplicationContext(context);
+        new Thread(new KafkaConcusme("cache-message")).start();
     }
 
     @Override
