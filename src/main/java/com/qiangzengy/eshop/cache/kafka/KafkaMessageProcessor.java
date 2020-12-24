@@ -8,6 +8,7 @@ import com.qiangzengy.eshop.cache.service.CacheService;
 import com.qiangzengy.eshop.cache.spring.SpringContext;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
+import kafka.message.MessageAndMetadata;
 
 /**
  * kafka处理线程
@@ -26,9 +27,9 @@ public class KafkaMessageProcessor implements Runnable {
 
     @Override
     public void run() {
-        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
+        ConsumerIterator it = kafkaStream.iterator();
         while (it.hasNext()) {
-            String message = new String(it.next().message());
+            String message = new String((byte[]) it.next().message());
             JSONObject json= JSON.parseObject(message);
             //提取服务对应的标识
             String serviceId = json.getString("serviceid");
