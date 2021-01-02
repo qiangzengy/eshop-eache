@@ -8,21 +8,28 @@ import com.qiangzengy.eshop.cache.service.CacheService;
 import com.qiangzengy.eshop.cache.spring.SpringContext;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * kafka处理线程
  */
 @SuppressWarnings("rawtypes")
+@Slf4j
 public class KafkaMessageProcessor implements Runnable {
 
     private KafkaStream kafkaStream;
+
     private CacheService cacheService;
+
+    @Autowired
+    private CacheService cacheService1;
 
     public KafkaMessageProcessor(KafkaStream kafkaStream) {
 
         this.kafkaStream = kafkaStream;
-        this.cacheService=(CacheService)new SpringContext().getApplicationContext().getBean("cacheService");
+        this.cacheService=cacheService1;
+        //this.cacheService=(CacheService)new SpringContext().getApplicationContext().getBean("cacheService");
     }
 
     @Override
@@ -30,9 +37,10 @@ public class KafkaMessageProcessor implements Runnable {
         ConsumerIterator it = kafkaStream.iterator();
         while (it.hasNext()) {
             String message = new String((byte[]) it.next().message());
+            log.info("===========>,message:{}",message);
             JSONObject json= JSON.parseObject(message);
             //提取服务对应的标识
-            String serviceId = json.getString("serviceid");
+            String serviceId = json.getString("serviceId");
             //如果是商品信息服务
             if ("productInfoService".equals(serviceId)){
                 processProductInfoChangeMessage(json);
@@ -70,7 +78,7 @@ public class KafkaMessageProcessor implements Runnable {
      */
     private void processShopInfoChangeMessage(JSONObject messageJSONObject) {
         // 提取出商品id
-        Long productId = messageJSONObject.getLong("productId");
+        //Long productId = messageJSONObject.getLong("productId");
         Long shopId = messageJSONObject.getLong("shopId");
 
         // 调用商品信息服务的接口

@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
  */
 public class SpringContext {
 
-    private static ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     public ApplicationContext getApplicationContext() {
         return applicationContext;
